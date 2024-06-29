@@ -29,12 +29,19 @@ class _WorkspacePageWithLibState extends State<WorkspacePageWithLib> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Рабочие пространства'),
-        actions: const [
+        actions: [
           Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Icon(Icons.search),
-          ),
+            padding: const EdgeInsets.all(8.0),
+            child: IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.add),
+            ),
+          )
         ],
+        leading: IconButton(
+          onPressed: () {},
+          icon: const Icon(Icons.settings_rounded),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
