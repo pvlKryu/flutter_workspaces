@@ -1,5 +1,7 @@
 # flutter_workspaces
 
+try here - https://pvlkryu.github.io/flutter_workspaces_web_demo/ 
+
 ## тестовое задание
 ### Необходимо сделать:
 <img width="312" alt="image" src="https://github.com/pvlKryu/flutter_workspaces/assets/57821178/0a487357-8464-46b6-8f3f-0c21e51959c3">
