@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class WorkspacePageWithoutLib extends StatefulWidget {
-  const WorkspacePageWithoutLib({super.key});
+class WorkSpacePageWithoutLib extends StatefulWidget {
+  const WorkSpacePageWithoutLib({super.key});
 
   @override
-  State<WorkspacePageWithoutLib> createState() => _WorkspacePageWithoutLibState();
+  State<WorkSpacePageWithoutLib> createState() => _WorkSpacePageWithoutLibState();
 }
 
-class _WorkspacePageWithoutLibState extends State<WorkspacePageWithoutLib> {
-  List<Workspace> workspaces = [
+class _WorkSpacePageWithoutLibState extends State<WorkSpacePageWithoutLib> {
+  List<Workspace> workSpaces = [
     Workspace(name: 'Savva', color: Colors.red),
     Workspace(name: 'Olluco', color: Colors.pink),
     Workspace(name: 'Loona', color: Colors.purple),
@@ -42,32 +42,32 @@ class _WorkspacePageWithoutLibState extends State<WorkspacePageWithoutLib> {
             crossAxisSpacing: 8.0,
             mainAxisSpacing: 8.0,
           ),
-          itemCount: workspaces.length,
+          itemCount: workSpaces.length,
           itemBuilder: (context, index) {
             return DragTarget<Workspace>(
               onAccept: (receivedWorkspace) {
                 setState(() {
-                  final currentIndex = workspaces.indexOf(receivedWorkspace);
-                  workspaces.removeAt(currentIndex);
-                  workspaces.insert(index, receivedWorkspace);
+                  final currentIndex = workSpaces.indexOf(receivedWorkspace);
+                  workSpaces.removeAt(currentIndex);
+                  workSpaces.insert(index, receivedWorkspace);
                 });
               },
               builder: (context, candidateData, rejectedData) {
                 return DraggableCard(
-                  workspace: workspaces[index],
+                  workspace: workSpaces[index],
                   onDragStarted: () {
                     setState(() {
-                      workspaces[index].isBeingDragged = true;
+                      workSpaces[index].isBeingDragged = true;
                     });
                   },
                   onDragCompleted: () {
                     setState(() {
-                      workspaces[index].isBeingDragged = false;
+                      workSpaces[index].isBeingDragged = false;
                     });
                   },
                   onDragEnd: (_) {
                     setState(() {
-                      workspaces[index].isBeingDragged = false;
+                      workSpaces[index].isBeingDragged = false;
                     });
                   },
                 );

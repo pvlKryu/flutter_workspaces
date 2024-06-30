@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_workspaces/presentation/models/workspace_presentational_model.dart';
+import 'package:flutter_workspaces/domain/entities/workspace_entity.dart';
 
 final class CardWidget extends StatelessWidget {
-  final Workspace workspace;
+  final WorkSpaceEntity workspace;
 
   const CardWidget({super.key, required this.workspace});
 
@@ -21,7 +21,7 @@ final class CardWidget extends StatelessWidget {
               alignment: Alignment.topRight,
               child: Icon(Icons.more_horiz, color: Colors.white),
             ),
-            Text(workspace.name, style: const TextStyle(color: Colors.white)),
+            Text(workspace.title, style: const TextStyle(color: Colors.white)),
           ],
         ),
       ),
