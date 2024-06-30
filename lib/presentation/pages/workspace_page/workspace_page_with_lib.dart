@@ -9,7 +9,6 @@ import 'package:flutter_workspaces/presentation/widgets/add_workspace_modal.dart
 import 'package:flutter_workspaces/presentation/widgets/card_widget.dart';
 import 'package:flutter_workspaces/presentation/widgets/theme_settings.dart';
 import 'package:get_it/get_it.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 class WorkSpacePageWithLib extends StatefulWidget {
   const WorkSpacePageWithLib({super.key});
@@ -109,7 +108,10 @@ class _WorkSpacePageWithLibState extends State<WorkSpacePageWithLib> {
   }
 
   Widget buildWorkSpaces(BuildContext context, List<WorkSpaceEntity> workSpaces) {
-    int crossAxisCount = kIsWeb ? 4 : 2;
+    final width = MediaQuery.of(context).size.width;
+    final bool isMobile = width < 600;
+    final bool isTablet = width >= 600 && width < 1200;
+    final int crossAxisCount = isMobile ? 2 : (isTablet ? 3 : 4);
 
     return workSpaces.isEmpty
         ? const Center(child: Text('У вас нет рабочих пространств'))
