@@ -6,7 +6,7 @@ final class SaveStateUseCase {
 
   const SaveStateUseCase({required Repository repository}) : _repository = repository;
 
-  Future<void> call(Set<WorkSpaceEntity> workSpaces) async {
+  Future<void> call(List<WorkSpaceEntity> workSpaces) async {
     try {
       return await _repository.saveState(workSpaces);
     } catch (e) {

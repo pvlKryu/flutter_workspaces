@@ -3,45 +3,36 @@ import 'package:flutter_workspaces/data/local_data_source/local_data_source.dart
 import 'package:flutter_workspaces/domain/entities/workspace_entity.dart';
 import 'package:flutter_workspaces/domain/repository/repository.dart';
 
-final class RepositoryImpl implements Repository {
+class RepositoryImpl implements Repository {
   final LocalDataSource _localDataSource;
 
   RepositoryImpl({required LocalDataSource localDataSource}) : _localDataSource = localDataSource;
 
   @override
-  Future<Set<WorkSpaceEntity>> getWorkSpaces() async {
-    final workSpacesDtoSet = await _localDataSource.getWorkSpace();
-    final entitySet = workSpacesDtoSet.map((workspace) {
-      return WorkSpaceEntity(title: workspace.title, color: workspace.color);
-    }).toSet();
-    return entitySet;
+  Future<List<WorkSpaceEntity>> getWorkSpaces() async {
+    final workSpacesDtoList = await _localDataSource.getWorkSpace();
+    return workSpacesDtoList.map((workspace) => workspace.toEntity()).toList();
   }
 
   @override
-  Future<void> removeWorkSpace(WorkSpaceEntity workspaceEntity) async {}
+  Future<void> removeWorkSpace(WorkSpaceEntity workspaceEntity) async {
+    await _localDataSource.removeWorkSpace(WorkSpaceDto.fromEntity(workspaceEntity));
+  }
 
   @override
   Future<void> saveWorkSpace(WorkSpaceEntity workspaceEntity) async {
-    await _localDataSource.saveWorkSpace(WorkSpaceDto(title: workspaceEntity.title, color: workspaceEntity.color));
+    await _localDataSource.saveWorkSpace(WorkSpaceDto.fromEntity(workspaceEntity));
   }
 
   @override
-  Future<void> searchWorkSpace(String querry) {
-    // TODO: implement searchWorkSpace
-    throw UnimplementedError();
+  Future<List<WorkSpaceEntity>> searchWorkSpace(String query) async {
+    final searchedDto = await _localDataSource.searchWorkSpace(query);
+    return searchedDto.map((workspace) => workspace.toEntity()).toList();
   }
 
   @override
-  Future<void> updateWorkSpace(WorkSpaceEntity oldWorkspaceEntity, WorkSpaceEntity newWorkspaceEntity) {
-    // TODO: implement updateWorkSpace
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> saveState(Set<WorkSpaceEntity> workSpaces) async {
-    final dtoSet = workSpaces.map((workspace) {
-      return WorkSpaceDto(title: workspace.title, color: workspace.color);
-    }).toSet();
-    await _localDataSource.saveState(dtoSet);
+  Future<void> saveState(List<WorkSpaceEntity> workSpaces) async {
+    final dtoList = workSpaces.map((workspace) => WorkSpaceDto.fromEntity(workspace)).toList();
+    await _localDataSource.saveState(dtoList);
   }
 }

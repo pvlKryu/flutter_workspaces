@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_workspaces/domain/entities/workspace_entity.dart';
 
 class WorkSpacePageState extends Equatable {
-  final Set<WorkSpaceEntity> workSpaces;
+  final List<WorkSpaceEntity> workSpaces;
   final bool isLoading;
   final String fromCurrencyChoosen;
   final String toCurrencyChoosen;
@@ -19,11 +19,11 @@ class WorkSpacePageState extends Equatable {
   });
 
   factory WorkSpacePageState.initial() {
-    return const WorkSpacePageState._(workSpaces: {});
+    return const WorkSpacePageState._(workSpaces: []);
   }
 
   WorkSpacePageState copyWith({
-    Set<WorkSpaceEntity>? workSpaces,
+    List<WorkSpaceEntity>? workSpaces,
     bool? isLoading,
     String? fromCurrencyChoosen,
     String? toCurrencyChoosen,

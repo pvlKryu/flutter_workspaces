@@ -1,3 +1,4 @@
+import 'package:flutter_workspaces/domain/entities/workspace_entity.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:flutter/material.dart';
 
@@ -18,4 +19,12 @@ class WorkSpaceDto {
   static Color _colorFromJson(int colorValue) => Color(colorValue);
 
   static int _colorToJson(Color color) => color.value;
+
+  WorkSpaceEntity toEntity() {
+    return WorkSpaceEntity(title: title, color: color);
+  }
+
+  static WorkSpaceDto fromEntity(WorkSpaceEntity entity) {
+    return WorkSpaceDto(title: entity.title, color: entity.color);
+  }
 }

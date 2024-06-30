@@ -6,7 +6,7 @@ final class GetAllWorkSpacesUseCase {
 
   const GetAllWorkSpacesUseCase({required Repository repository}) : _repository = repository;
 
-  Future<Set<WorkSpaceEntity>> call() async {
+  Future<List<WorkSpaceEntity>> call() async {
     try {
       return await _repository.getWorkSpaces();
     } catch (e) {

@@ -7,7 +7,9 @@ import 'package:flutter_workspaces/presentation/pages/workspace_page/bloc/work_s
 import 'package:flutter_workspaces/presentation/pages/workspace_page/bloc/work_space_page_state.dart';
 import 'package:flutter_workspaces/presentation/widgets/add_workspace_modal.dart';
 import 'package:flutter_workspaces/presentation/widgets/card_widget.dart';
+import 'package:flutter_workspaces/presentation/widgets/theme_settings.dart';
 import 'package:get_it/get_it.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class WorkSpacePageWithLib extends StatefulWidget {
   const WorkSpacePageWithLib({super.key});
@@ -26,6 +28,8 @@ class _WorkSpacePageWithLibState extends State<WorkSpacePageWithLib> {
         getAllWorkSpacesUseCase: getIt(),
         addWorkSpaceUseCase: getIt(),
         saveStateUseCase: getIt(),
+        removeWorkSpaceUseCase: getIt(),
+        searchWorkSpacesUseCase: getIt(),
       ),
       child: BlocBuilder<WorkSpacePageBloc, WorkSpacePageState>(builder: (context, state) {
         return Scaffold(
@@ -54,7 +58,7 @@ class _WorkSpacePageWithLibState extends State<WorkSpacePageWithLib> {
               )
             ],
             leading: IconButton(
-              onPressed: () {},
+              onPressed: () => showThemeDialog(context),
               icon: const Icon(Icons.settings_rounded),
             ),
           ),
@@ -65,7 +69,9 @@ class _WorkSpacePageWithLibState extends State<WorkSpacePageWithLib> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextField(
-                    onChanged: (value) {},
+                    onChanged: (value) {
+                      context.read<WorkSpacePageBloc>().add(SearchWorkSpaceEvent(querry: value));
+                    },
                     decoration: const InputDecoration(
                       labelText: 'Поиск',
                       prefixIcon: Icon(Icons.search),
@@ -78,32 +84,7 @@ class _WorkSpacePageWithLibState extends State<WorkSpacePageWithLib> {
                 Expanded(
                   child: state.isLoading
                       ? const Center(child: CircularProgressIndicator())
-                      : state.workSpaces.isEmpty
-                          ? const Center(child: Text('У вас нет рабочих пространств'))
-                          : DraggableGridViewBuilder(
-                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                childAspectRatio: 2,
-                                crossAxisSpacing: 8.0,
-                                mainAxisSpacing: 8.0,
-                              ),
-                              children: state.workSpaces.map((workspace) {
-                                return DraggableGridItem(
-                                  isDraggable: true,
-                                  child: buildCard(workspace),
-                                );
-                              }).toList(),
-                              isOnlyLongPress: false,
-                              dragCompletion: (List<DraggableGridItem> list, int oldIndex, int newIndex) {
-                                onDragAccept(context, state.workSpaces.toList(), oldIndex, newIndex);
-                              },
-                              dragFeedback: (List<DraggableGridItem> list, int index) {
-                                return Material(
-                                  color: Colors.transparent,
-                                  child: list[index].child,
-                                );
-                              },
-                            ),
+                      : buildWorkSpaces(context, state.workSpaces),
                 ),
               ],
             ),
@@ -114,12 +95,53 @@ class _WorkSpacePageWithLibState extends State<WorkSpacePageWithLib> {
   }
 
   Widget buildCard(WorkSpaceEntity workspace) {
-    return CardWidget(workspace: workspace);
+    return GestureDetector(
+      onTap: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Зажмите карточку, чтобы ее передвинуть'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      },
+      child: CardWidget(workspace: workspace),
+    );
+  }
+
+  Widget buildWorkSpaces(BuildContext context, List<WorkSpaceEntity> workSpaces) {
+    int crossAxisCount = kIsWeb ? 4 : 2;
+
+    return workSpaces.isEmpty
+        ? const Center(child: Text('У вас нет рабочих пространств'))
+        : DraggableGridViewBuilder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCount,
+              childAspectRatio: 2,
+              crossAxisSpacing: 8.0,
+              mainAxisSpacing: 8.0,
+            ),
+            children: workSpaces.map((workspace) {
+              return DraggableGridItem(
+                isDraggable: true,
+                child: buildCard(workspace),
+              );
+            }).toList(),
+            isOnlyLongPress: true,
+            dragCompletion: (List<DraggableGridItem> list, int oldIndex, int newIndex) {
+              onDragAccept(context, workSpaces.toList(), oldIndex, newIndex);
+            },
+            dragFeedback: (List<DraggableGridItem> list, int index) {
+              return Material(
+                color: Colors.transparent,
+                child: list[index].child,
+              );
+            },
+          );
   }
 
   void onDragAccept(BuildContext context, List<WorkSpaceEntity> workSpaces, int oldIndex, int newIndex) {
     final item = workSpaces.removeAt(oldIndex);
     workSpaces.insert(newIndex, item);
-    context.read<WorkSpacePageBloc>().add(SaveStateEvent(workSpaces: workSpaces.toSet()));
+    context.read<WorkSpacePageBloc>().add(SaveStateEvent(workSpaces: workSpaces.toList()));
   }
 }
